@@ -46,15 +46,15 @@ Write concrete steps for your schedule to move from concept to working system.
 
 ### First Milestone (Sun Apr 9)
 
-Directory path for files and MP3 ID3 parsing of data.  
+Directory path for files and MP3 ID3 parsing of object data.  
 
 ### Second Milestone (Sun Apr 16)
 
-UI for music player.  
+Making the UI for the player with play/pause controls that is clean and easy to use.  
 
 ### Public Presentation (Mon Apr 24, Wed Apr 26, or Fri Apr 28 [your date to be determined later])
 
-Extra UI features (open custom files).  
+Successfully have completed getting id3 object data and parsing it to use with UI, and getting and playing MP3 files with VLC player in the background, error checking if users try to open files that aren't supported/
 
 
 ## Group Responsibilities
@@ -64,9 +64,12 @@ Please use Github properly: each individual must make the edits to this file rep
 
 
 ### Mayur Khatri @tensai66
-mp3 id3 parsing 
+Getting directory and file path for mp3 id3 parsing, this includes the recursive functions to get list of id3 objects and parsing that data with filters to be used for the UI portion.
 
 ### Ryan Delosh @Liqueseous
-- [ ] Milestone One - Add procedures for music manipulation that will later play a major role in UI development
-- [ ] Milestone Two - Add UI components for previously mentioned procedures and create unit tests for data parsing features
-- [ ] Public Presentation - Implement Extra UI feature through collabarative effort
+#### Milestone One
+  Add procedures for music manipulation that will later play a major role in UI development
+#### Milestone Two
+  Add UI components for previously mentioned procedures
+#### Public Presentation
+  Implement Extra UI feature through collabarative effort
