@@ -4,16 +4,14 @@
 An MP3 Player in Racket with clean UI that also has the ability to play videos. It's interesting because it takes most of the core concepts learned in class like recursion, filter and object orientation.
 
 ### Analysis
-Explain what approaches from class you will bring to bear on the project.
 
-Data abstraction by the ID3 tags as objects from structure.
-Recursively making list of ID3 objects for album/artists.
-Filtering ID3 objects by the album/artists and outputting.
-Object orientation by ID3 objects that have functions for returning songs/albums/artists/year/genre.
-Functional approaches by recursively processing the album/artists then outputting.
+Data abstraction by the ID3 tags as objects from structure.  
+Recursively making list of ID3 objects for album/artists.  
+Filtering ID3 objects by the album/artists and outputting.  
+Object orientation by ID3 objects that have functions for returning songs/albums/artists/year/genre.  
+Functional approaches by recursively processing the album/artists then outputting.  
 
 ### External Technologies
-You are encouraged to develop a project that connects to external systems. For example, this includes systems that:
 
 Project will process sound and video by using VLC player with an interactive interface (play/pause controls etc).
 
@@ -23,19 +21,14 @@ Source materials include MP3/Video files on the system which will be played. Sin
 
 ### Deliverable and Demonstration
 
-An MP3/Video player that has an clean interactive UI allowing for control over the player.
-
-Explain exactly what you'll have at the end. What will it be able to do at the live demo?
-
-What exactly will you produce at the end of the project? A piece of software, yes, but what will it do? Here are some questions to think about (and answer depending on your application).
-
-Will it run on some data, like batch mode? Will you present some analytical results of the processing? How can it be re-run on different source data?
-
-Will it be interactive? Can you show it working? This project involves a live demo, so interactivity is good.
+An MP3/Video player that has an clean interactive UI allowing for control over the player such as pause/play.
 
 ### Evaluation of Results
+
 How will you know if you are successful? 
-If you include some kind of _quantitative analysis,_ that would be good.
+
+If all criteria for the project are met.  
+If the player is able to open and play the files successfully and has a clean interactive UI.  
 
 ## Architecture Diagram
 Upload the architecture diagram you made for your slide presentation to your repository, and include it in-line here.
