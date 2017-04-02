@@ -67,9 +67,6 @@ Please use Github properly: each individual must make the edits to this file rep
 Getting directory and file path for mp3 id3 parsing, this includes the recursive functions to get list of id3 objects and parsing that data with filters to be used for the UI portion.
 
 ### Ryan Delosh @Liqueseous
-#### Milestone One
-  Add procedures for music manipulation that will later play a major role in UI development
-#### Milestone Two
-  Add UI components for previously mentioned procedures
-#### Public Presentation
-  Implement Extra UI feature through collabarative effort
+- [ ] Milestone One - Add procedures for music manipulation that will later play a major role in UI development
+- [ ] Milestone Two -Add UI components for previously mentioned procedures
+- [ ] Public Presentation - Implement Extra UI feature through collabarative effort
