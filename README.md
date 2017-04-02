@@ -29,10 +29,9 @@ If all criteria for the project are met (analysis section).
 If the player is able to open and play the files successfully and has a clean interactive UI.  
 
 ## Architecture Diagram
-Upload the architecture diagram you made for your slide presentation to your repository, and include it in-line here.
-
-Create several paragraphs of narrative to explain the pieces and how they interoperate.
-
+![Architecture Diagram](https://cloud.githubusercontent.com/assets/16441327/24590864/f4334e3a-17c2-11e7-9328-5012de00fdb9.png)
+  We will create a procedure that will search a given directory for .mp3 files, from there we will parse the ID3 tags and generate a list. Once the list is generated it is displayed in the UI and the song can be controlled through the UI using data abstration into the procedures that we created to manipulate the files. The only thing that the user can see is the UI.
+  
 ## Schedule
 Explain how you will go from proposal to finished product. 
 
