@@ -1,48 +1,30 @@
 # MP3-Player
 
-# Project Title Goes Here (10 words maximum)
-
 ### Statement
-Describe your project. Why is it interesting? Why is it interesting to you personally? What do you hope to learn? 
+An MP3 Player in Racket with clean UI that also has the ability to play videos. It's interesting because it takes most of the core concepts learned in class like recursion, filter and object orientation.
 
 ### Analysis
 Explain what approaches from class you will bring to bear on the project.
 
-Be explicit about the techiques from the class that you will use. For example:
-
-- Will you use data abstraction? How?
-- Will you use recursion? How?
-- Will you use map/filter/reduce? How? 
-- Will you use object-orientation? How?
-- Will you use functional approaches to processing your data? How?
-- Will you use state-modification approaches? How? (If so, this should be encapsulated within objects. `set!` pretty much should only exist inside an object.)
-- Will you build an expression evaluator, like we did in the symbolic differentatior and the metacircular evaluator?
-- Will you use lazy evaluation approaches?
-
-The idea here is to identify what ideas from the class you will use in carrying out your project. 
-
-**Your project will be graded, in part, by the extent to which you adopt approaches from the course into your implementation, _and_ your discussion about this.**
+Data abstraction by the ID3 tags as objects from structure.
+Recursively making list of ID3 objects for album/artists.
+Filtering ID3 objects by the album/artists and outputting.
+Object orientation by ID3 objects that have functions for returning songs/albums/artists/year/genre.
+Functional approaches by recursively processing the album/artists then outputting.
 
 ### External Technologies
 You are encouraged to develop a project that connects to external systems. For example, this includes systems that:
 
-- retrieve information or publish data to the web
-- generate or process sound
-- control robots or other physical systems
-- interact with databases
-
-If your project will do anything in this category (not only the things listed above!), include this section and discuss.
+Project will process sound and video by using VLC player with an interactive interface (play/pause controls etc).
 
 ### Data Sets or other Source Materials
-If you will be working with existing data, where will you get those data from? (Dowload from a website? Access in a database? Create in a simulation you will build? ...)
 
-How will you convert your data into a form usable for your project?  
-
-If you are pulling data from somewhere, actually go download it and look at it before writing the proposal. Explain in some detail what your plan is for accomplishing the necessary processing.
-
-If you are using some other starting materials, explain what they are. Basically: anything you plan to use that isn't code.
+Source materials include MP3/Video files on the system which will be played. Since the files will be in MP3 format or any format supported by VLC.
 
 ### Deliverable and Demonstration
+
+An MP3/Video player that has an clean interactive UI allowing for control over the player.
+
 Explain exactly what you'll have at the end. What will it be able to do at the live demo?
 
 What exactly will you produce at the end of the project? A piece of software, yes, but what will it do? Here are some questions to think about (and answer depending on your application).
