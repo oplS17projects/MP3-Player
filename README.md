@@ -54,14 +54,9 @@ Making the UI for the player with play/pause controls that is clean and easy to 
 
 ### Public Presentation (Mon Apr 24, Wed Apr 26, or Fri Apr 28 [your date to be determined later])
 
-Successfully have completed getting id3 object data and parsing it to use with UI, and getting and playing MP3 files with VLC player in the background, error checking if users try to open files that aren't supported/
-
+Successfully have completed getting id3 object data and parsing it to use with UI, and getting and playing MP3 files with VLC player in the background, error checking if users try to open files that aren't supported.
 
 ## Group Responsibilities
-Here each group member gets a section where they, as an individual, detail what they are responsible for in this project. Each group member writes their own Responsibility section. Include the milestones and final deliverable.
-
-Please use Github properly: each individual must make the edits to this file representing their own section of work.
-
 
 ### Mayur Khatri @tensai66
 Getting directory and file path for mp3 id3 parsing, this includes the recursive functions to get list of id3 objects and parsing that data with filters to be used for the UI portion.
