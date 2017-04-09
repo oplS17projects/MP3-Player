@@ -34,6 +34,7 @@
 ;;(statename 'true) set that state to true
 ;;(statename 'state?) retrive the value of the state
 
+;Define of our states
 (define isShuffle (make-state #f))
 (define isPlaying (make-state #f))
 
@@ -43,10 +44,20 @@
   (begin (clearQ)
   (addQ URL)))
 
-;;Song Pause/unpause
-(define (pause) (begin (vlc-pause)
-                 (isPlaying 'flip)))
 
+;;Song Pause/unpause
+;pause should only be used to pause, not initiate playback, play should be used to resume
+;play-pause is the safest way to handle this
+(define (pause) (begin (isPlaying 'flip) (vlc-pause)))
+
+;;Play in queue
+(define (play) (begin (vlc-play) (isPlaying 'true)))
+;;Stop Song
+(define (stop) (begin (vlc-stop) (isPlaying 'false)))
+;;toggle play/pause
+(define (play-pause) (if (eq? #f (isPlaying 'state?))
+                         (begin (isPlaying 'true) (play))
+                         (begin (isPlaying 'false) (pause))))
 ;;Song Next in Queue
 (define (myNext) (vlc-next))
 ;;Song Previous
@@ -59,10 +70,12 @@
   (begin (playAll lst)
    (shuffleToggle)))
 
+;;Toggle shuffle playback
 (define (shuffleToggle)
   (if (eq? isShuffle #t)
        (begin (vlc-random #f) (isShuffle 'false))
        (begin (vlc-random #t) (isShuffle 'true))))
+
 ;;Play All
 ;;;Adds all to queue without shuffling
 (define (playAll lst)
@@ -71,10 +84,10 @@
       (begin(addQ (car lst))(isPlaying 'true)(playAll (cdr lst)))))
 ;;Add to Queue
 ;;;Must be able to adapt to every song
-(define (addQ URL) (begin (vlc-add URL)
-                          (if (eq? #f (isPlaying 'state?))
-                              (begin (pause) (isPlaying 'false))
-                              (isPlaying 'true))))
+(define (addQ URL) (if (eq? #f (isPlaying 'state?))
+                              (begin (vlc-add URL) (stop))
+                              (begin (vlc-add URL) (isPlaying 'true))))
+                                     
 ;;Clear Queue
 (define (clearQ) (vlc-clear))
 ;;;USED FOR LOCAL TESTING
