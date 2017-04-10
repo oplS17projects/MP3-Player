@@ -57,7 +57,7 @@
 ;;toggle play/pause
 (define (play-pause) (if (eq? #f (isPlaying 'state?))
                          (begin (isPlaying 'true) (play))
-                         (begin (isPlaying 'false) (pause))))
+                         (begin (pause))))
 ;;Song Next in Queue
 (define (myNext) (vlc-next))
 ;;Song Previous
@@ -89,7 +89,7 @@
                               (begin (vlc-add URL) (isPlaying 'true))))
                                      
 ;;Clear Queue
-(define (clearQ) (vlc-clear))
+(define (clearQ) (begin (vlc-clear) (isPlaying 'false)))
 ;;;USED FOR LOCAL TESTING
 ;;/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3
 ;;(define mylist '("/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/NEST.mp3""/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Victorious.mp3""/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3"))
