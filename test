@@ -1,0 +1,20 @@
+#lang racket
+
+(require racket/file)
+(require binary-class/mp3)
+
+(define (make-list file-folder)
+  (if (null? file-folder)
+      '()
+      (cons (path->string (car file-folder)) (make-list (cdr file-folder)))))
+
+(define file-path (string->path "/Users/mayur/Documents/"))
+(define (file-format exten) (string-suffix? (path->string exten) ".mp3"))
+(define file-folder (find-files file-format file-path))
+(define get-song-info (make-list file-folder))
+
+(read-id3 "/Users/mayur/Documents/drugs.mp3")
+
+(define test '())
+
+(set! test (cons (song (read-id3 "/Users/mayur/Documents/drugs.mp3")) test))
