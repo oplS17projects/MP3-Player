@@ -1,5 +1,6 @@
-#lang racket
+#lang racket/gui
 (require vlc)
+(require racket/gui/base)
 
 (define my-vlc (start-vlc #:port 5000 #:hostname "127.0.0.1"))
 (vlc-loop #t)
@@ -51,12 +52,12 @@
 (define (pause) (begin (isPlaying 'flip) (vlc-pause)))
 
 ;;Play in queue
-(define (play) (begin (vlc-play) (isPlaying 'true)))
+(define (myplay) (begin (vlc-play) (isPlaying 'true)))
 ;;Stop Song
-(define (stop) (begin (vlc-stop) (isPlaying 'false)))
+(define (mystop) (begin (vlc-stop) (isPlaying 'false)))
 ;;toggle play/pause
-(define (play-pause) (if (eq? #f (isPlaying 'state?))
-                         (begin (isPlaying 'true) (play))
+(define (myplay-pause) (if (eq? #f (isPlaying 'state?))
+                         (begin (isPlaying 'true) (myplay))
                          (begin (pause))))
 ;;Song Next in Queue
 (define (myNext) (vlc-next))
@@ -85,7 +86,7 @@
 ;;Add to Queue
 ;;;Must be able to adapt to every song
 (define (addQ URL) (if (eq? #f (isPlaying 'state?))
-                              (begin (vlc-add URL) (stop))
+                              (begin (vlc-add URL) (mystop))
                               (begin (vlc-add URL) (isPlaying 'true))))
                                      
 ;;Clear Queue
@@ -96,7 +97,32 @@
 
 
 
+(define window (new frame% [label "MP3-Player"]))
+(define bottom (new horizontal-panel% [parent window] [alignment '(center bottom)]))
 
+;;(define msg (new message% [parent bottom]
+;;                 [label "No events so far..."]))
+
+(define dialog (instantiate dialog% ("Example")))
+(new text-field% [parent dialog] [label "Your name"])
+
+(define pp (new button% [parent bottom] [label "Play"]
+     [callback (lambda (button event)
+                 (begin (sleep .01) (if (eq? (isPlaying 'state?) #f)
+                                        (send pp set-label "Pause")
+                                        (send pp set-label "Play"))
+                        (myplay-pause)))]))
+
+(when (system-position-ok-before-cancel?)
+  (send bottom change-children reverse))
+
+;;(new button% [parent bottom]
+;;     [label "Click Me"]
+;;     [callback (lambda (button event)
+;;                 (send msg set-label "Button Clicked"))])
+;;addQ "/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3"
+
+(send window show #t)
 
 
 
