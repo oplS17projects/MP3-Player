@@ -7,6 +7,22 @@
 (vlc-loop #t)
 (define nil '())
 
+(define file-path (string->path "C:\\Users\\MayursMac\\Music\\My Music\\Blink 182 Discography\\2013 - Icon\\"))
+(define (file-format exten) (string-suffix? (path->string exten) ".mp3"))
+(define file-folder (find-files file-format file-path))
+(define get-song-dir (make-list file-folder)) ;;function to put songs into list from the file-path
+
+(define (make-list file-folder)
+  (if (null? file-folder)
+      '()
+      (cons (path->string (car file-folder)) (make-list (cdr file-folder)))))
+
+(define (get-song get-song-dir)
+  (if (null? get-song-dir)
+      '()
+      (cons (string-append (car (read-id3 get-song-dir))
+                          (get-song (cdr (read-id3 get-song-dir))))))) ;;not used yet
+
 ;Creates a state object that we can later use to keep track of true/false states
 (define (make-state Statenow)
 
@@ -95,13 +111,3 @@
 ;;;USED FOR LOCAL TESTING
 ;;/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3
 ;;(define mylist '("/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/NEST.mp3""/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Victorious.mp3""/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3"))
-
-(define file-path (string->path "C:\\Users\\MayursMac\\Music\\My Music\\Blink 182 Discography\\2013 - Icon\\"))
-(define (file-format exten) (string-suffix? (path->string exten) ".mp3"))
-(define file-folder (find-files file-format file-path))
-(define get-song-info '())
-
-(define (list-of-songs get-song-info)
-  (if (null? get-song-info)
-      '()
-      (cons (string-append (song (car get-song-info))))))
