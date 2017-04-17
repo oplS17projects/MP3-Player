@@ -195,11 +195,19 @@
      [callback (lambda (button event)
                  (begin (shuffleAll get-song-dir)
                         (send pp set-label "Pause")
+                        (send shuffleTB set-label "Shuffle On")
                         (sleep .5)
                         (send PlayMsg set-label (vlc-get-title))))]))
 
 
-
+(define shuffleTB (new button% [parent topleft] [label "Shuffle Off"]
+     [callback (lambda (button event)
+                 (begin (sleep .01) (if (eq? (isShuffle 'state?) #f)
+                                        (begin (send shuffleTB set-label "Shuffle On")
+                                               (isShuffle 'true))
+                                        (begin (send pp set-label "Play")
+                                               (begin (send shuffleTB set-label "Shuffle Off")
+                                               (isShuffle 'false))))))]))
 
 
 
