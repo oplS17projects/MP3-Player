@@ -3,14 +3,19 @@
 (require vlc)
 (require racket/file)
 (require binary-class/mp3)
+(require racket/gui/base)
+
 (define my-vlc (start-vlc #:port 5000 #:hostname "127.0.0.1"))
 (vlc-loop #t)
 (define nil '())
 
-(define file-path (string->path "C:\\Users\\MayursMac\\Music\\My Music\\Blink 182 Discography\\2013 - Icon\\"))
+;;;;;;;;;;CHANGE BELOW PATH TO YOUR MEDIA FILE PATH;;;;;;;;;;;;;;;;
+;;(define file-path (string->path "C:\\Users\\MayursMac\\Music\\My Music\\Blink 182 Discography\\2013 - Icon\\"))
+(define file-path (string->path "/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/"))
+;;;;;;;;;;;;;;;;;;;;;;CHANGE ABOVE PATH;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define (file-format exten) (string-suffix? (path->string exten) ".mp3"))
 (define file-folder (find-files file-format file-path))
-(define get-song-dir (make-list file-folder)) ;;function to put songs into list from the file-path
+
 
 (define (make-list file-folder)
   (if (null? file-folder)
@@ -23,6 +28,7 @@
       (cons (string-append (car (read-id3 get-song-dir))
                           (get-song (cdr (read-id3 get-song-dir))))))) ;;not used yet
 
+(define get-song-dir (make-list file-folder)) ;;function to put songs into list from the file-path
 ;Creates a state object that we can later use to keep track of true/false states
 (define (make-state Statenow)
 
@@ -60,7 +66,9 @@
 ;;;Must be able to adapt to every song will add to top of queue and play now depending on what vlc supports
 (define (playNow URL)
   (begin (clearQ)
-  (addQ URL)))
+  (addQ URL)
+  (sleep .05)
+  (myplay)))
 
 
 ;;Song Pause/unpause
@@ -69,12 +77,12 @@
 (define (pause) (begin (isPlaying 'flip) (vlc-pause)))
 
 ;;Play in queue
-(define (play) (begin (vlc-play) (isPlaying 'true)))
+(define (myplay) (begin (vlc-play) (isPlaying 'true)))
 ;;Stop Song
-(define (stop) (begin (vlc-stop) (isPlaying 'false)))
+(define (mystop) (begin (vlc-stop) (isPlaying 'false)))
 ;;toggle play/pause
-(define (play-pause) (if (eq? #f (isPlaying 'state?))
-                         (begin (isPlaying 'true) (play))
+(define (myplay-pause) (if (eq? #f (isPlaying 'state?))
+                         (begin (isPlaying 'true) (myplay))
                          (begin (pause))))
 ;;Song Next in Queue
 (define (myNext) (vlc-next))
@@ -103,7 +111,7 @@
 ;;Add to Queue
 ;;;Must be able to adapt to every song
 (define (addQ URL) (if (eq? #f (isPlaying 'state?))
-                              (begin (vlc-add URL) (stop))
+                              (begin (vlc-add URL) (mystop))
                               (begin (vlc-add URL) (isPlaying 'true))))
                                      
 ;;Clear Queue
@@ -111,3 +119,106 @@
 ;;;USED FOR LOCAL TESTING
 ;;/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3
 ;;(define mylist '("/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/NEST.mp3""/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Victorious.mp3""/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3"))
+
+
+
+(define window (new frame% [label "MP3-Player"]))
+(define topleft (new horizontal-panel%
+                     [parent window]
+                     [alignment '(left top)]))
+(define topright (new horizontal-panel%
+                      [parent window]
+                      [alignment '(right top)]))
+(define statuspanel (new horizontal-panel%
+                         [parent window]
+                         [alignment '(center bottom)]
+                         [vert-margin 0]
+                         [spacing 0]
+                         [border 0]))
+(define bottom (new horizontal-panel%
+                    [parent window]
+                    [alignment '(center bottom)]
+                    [vert-margin 0]
+                    [spacing 0]
+                    [border 0]))
+
+;;(define msg (new message% [parent bottom]
+;;                 [label "No events so far..."]))
+
+(define dialog (instantiate dialog% ("Example")))
+(new text-field% [parent dialog] [label "Your name"])
+
+(define PlayMsg (new message% [parent statuspanel]
+                     [label "Not Playing"]
+                     [auto-resize #t]))
+
+(new button% [parent bottom] [label "<<"]
+     [callback (lambda (button event)
+                 (begin (myPrev)
+                        (sleep .5)
+                        (send PlayMsg set-label (vlc-get-title))))])
+
+
+(define pp (new button% [parent bottom] [label "Play"]
+     [callback (lambda (button event)
+                 (begin (sleep .01) (if (eq? (isPlaying 'state?) #f)
+                                        (begin (send pp set-label "Pause")
+                                               (sleep .5)
+                                               (send PlayMsg set-label (vlc-get-title)))
+                                        (begin (send pp set-label "Play")
+                                               (sleep .5)
+                                               (send PlayMsg set-label "Paused")))
+                        (myplay-pause)))]))
+
+(new button% [parent bottom] [label ">>"]
+     [callback (lambda (button event)
+                 (begin (myNext)
+                        (sleep .5)
+                        (send PlayMsg set-label (vlc-get-title))))])
+
+(define clearQB (new button% [parent topleft] [label "Clear Queue"]
+     [callback (lambda (button event)
+                 (begin (clearQ)
+                        (send pp set-label "Play")
+                        (send PlayMsg set-label "Cleared Queue")
+                        (sleep 1)
+                        (send PlayMsg set-label "Not Playing")))]))
+
+(define playallB (new button% [parent topleft] [label "Play All"]
+     [callback (lambda (button event)
+                 (begin (playAll get-song-dir)
+                        (send pp set-label "Pause")
+                        (sleep .5)
+                        (send PlayMsg set-label (vlc-get-title))))]))
+
+(define shuffleallB (new button% [parent topleft] [label "Shuffle All"]
+     [callback (lambda (button event)
+                 (begin (shuffleAll get-song-dir)
+                        (send pp set-label "Pause")
+                        (sleep .5)
+                        (send PlayMsg set-label (vlc-get-title))))]))
+
+
+
+
+
+
+
+
+(send window show #t)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

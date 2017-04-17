@@ -98,6 +98,8 @@
 
 
 (define window (new frame% [label "MP3-Player"]))
+(define topleft (new horizontal-panel% [parent window] [alignment '(left top)]))
+(define topright (new horizontal-panel% [parent window] [alignment '(right top)]))
 (define bottom (new horizontal-panel% [parent window] [alignment '(center bottom)]))
 
 ;;(define msg (new message% [parent bottom]
@@ -106,6 +108,10 @@
 (define dialog (instantiate dialog% ("Example")))
 (new text-field% [parent dialog] [label "Your name"])
 
+(new button% [parent bottom] [label "<<"]
+     [callback (lambda (button event)
+                 (myPrev))])
+
 (define pp (new button% [parent bottom] [label "Play"]
      [callback (lambda (button event)
                  (begin (sleep .01) (if (eq? (isPlaying 'state?) #f)
@@ -113,29 +119,30 @@
                                         (send pp set-label "Play"))
                         (myplay-pause)))]))
 
-(when (system-position-ok-before-cancel?)
-  (send bottom change-children reverse))
+(new button% [parent bottom] [label ">>"]
+     [callback (lambda (button event)
+                 (myNext))])
 
-;;(new button% [parent bottom]
-;;     [label "Click Me"]
-;;     [callback (lambda (button event)
-;;                 (send msg set-label "Button Clicked"))])
-;;addQ "/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/Hypnotic.mp3"
+(define clearQB (new button% [parent topleft] [label "Clear Queue"]
+     [callback (lambda (button event)
+                 (begin (clearQ)
+                        (send pp set-label "Play")))]))
+
+(define playallB (new button% [parent topleft] [label "Play All"]
+     [callback (lambda (button event)
+                 (begin (playAll get-song-dir)
+                        (send pp set-label "Pause")))]))
+
+(define shuffleallB (new button% [parent topleft] [label "Shuffle All"]
+     [callback (lambda (button event)
+                 (begin (shuffleAll get-song-dir)
+                        (send pp set-label "Pause")))]))
+
+
+
+
+
+
+
 
 (send window show #t)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
