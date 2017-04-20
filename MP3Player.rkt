@@ -25,8 +25,21 @@
 (define (get-song get-song-dir)
   (if (null? get-song-dir)
       '()
-      (cons (string-append (car (read-id3 get-song-dir))
-                          (get-song (cdr (read-id3 get-song-dir))))))) ;;not used yet
+      (cons (if (eq? (song (read-id3 (car get-song-dir))) #f)
+                "No Title Available"
+                (song (read-id3 (car get-song-dir))))
+            (get-song (cdr get-song-dir)))))
+
+(define (get-artist get-song-dir)
+  (if (null? get-song-dir)
+      '()
+      (cons (if (eq? (artist (read-id3 (car get-song-dir))) #f)
+                "No Artist Available"
+                (artist (read-id3 (car get-song-dir))))
+            (get-song (cdr get-song-dir)))))
+
+(define artist-list (get-artist file-folder))
+(define title-list (get-song file-folder))
 
 (define get-song-dir (make-list file-folder)) ;;function to put songs into list from the file-path
 ;Creates a state object that we can later use to keep track of true/false states
@@ -85,9 +98,13 @@
                          (begin (isPlaying 'true) (myplay))
                          (begin (pause))))
 ;;Song Next in Queue
-(define (myNext) (vlc-next))
+(define (myNext) (if (eq? #f (isPlaying 'state?))
+                              (begin (vlc-next) (vlc-seek 0) (sleep .1) (vlc-pause) (send PlayMsg set-label (string-append "Paused - " (vlc-get-title))))
+                              (begin (vlc-next) (vlc-seek 0) (sleep .1)(isPlaying 'true) (send PlayMsg set-label (string-append "Playing - " (vlc-get-title))))))
 ;;Song Previous
-(define (myPrev) (vlc-prev))
+(define (myPrev) (if (eq? #f (isPlaying 'state?))
+                              (begin (vlc-prev) (vlc-seek 0) (sleep .1) (vlc-pause) (send PlayMsg set-label (string-append "Paused - " (vlc-get-title))))
+                              (begin (vlc-prev) (vlc-seek 0) (sleep .1) (isPlaying 'true) (send PlayMsg set-label (string-append "Playing - " (vlc-get-title))))))
 ;;currentlyPlaying?
 (define (isPlaying?) (isPlaying 'state?))
 
@@ -111,8 +128,8 @@
 ;;Add to Queue
 ;;;Must be able to adapt to every song
 (define (addQ URL) (if (eq? #f (isPlaying 'state?))
-                              (begin (vlc-add URL) (mystop))
-                              (begin (vlc-add URL) (isPlaying 'true))))
+                              (begin (vlc-add URL) (vlc-seek 0) (mystop))
+                              (begin (vlc-add URL) (vlc-seek 0) (isPlaying 'true))))
                                      
 ;;Clear Queue
 (define (clearQ) (begin (vlc-clear) (isPlaying 'false)))
@@ -122,14 +139,23 @@
 
 
 
-(define window (new frame% [label "MP3-Player"]))
+(define window (new frame% [label "MP3-Player"]
+                    [width 500]
+                    [height 600]))
 (define topleft (new horizontal-panel%
                      [parent window]
-                     [alignment '(left top)]))
-(define topright (new horizontal-panel%
+                     [alignment '(center top)]
+                     [spacing 5]
+                     [border 0]
+                     [vert-margin 0]
+                     [horiz-margin 100]))
+(define song-panel (new vertical-panel%
                       [parent window]
-                      [alignment '(right top)]))
-(define statuspanel (new horizontal-panel%
+                      [alignment '(center center)]
+                      [vert-margin 0]
+                      [min-height 600]
+                      [style '(auto-vscroll)]))
+(define statuspanel (new panel%
                          [parent window]
                          [alignment '(center bottom)]
                          [vert-margin 0]
@@ -137,9 +163,10 @@
                          [border 0]))
 (define bottom (new horizontal-panel%
                     [parent window]
-                    [alignment '(center bottom)]
+                    [alignment '(center top)]
                     [vert-margin 0]
-                    [spacing 0]
+                    [horiz-margin 0]
+                    [spacing 5]
                     [border 0]))
 
 ;;(define msg (new message% [parent bottom]
@@ -148,15 +175,32 @@
 (define dialog (instantiate dialog% ("Example")))
 (new text-field% [parent dialog] [label "Your name"])
 
+
+(define (print-songs songs artists songdir)
+  (if (null? songs)
+      '()
+      (begin (new message% [parent song-panel]
+                           [label (string-append (car songs) " - " (car artists))])
+
+             (new button% [parent song-panel] [label "Play Now"]
+     [callback (lambda (button event)
+                 (begin (playNow (car songdir))
+                        (send pp set-label "Pause")
+                        (send PlayMsg set-label (string-append "Playing - " (vlc-get-title)))))])
+             
+             (print-songs (cdr songs) (cdr artists) (cdr songdir)))))
+
+(define printed-songs (print-songs title-list artist-list get-song-dir))
+
+
+
 (define PlayMsg (new message% [parent statuspanel]
                      [label "Not Playing"]
                      [auto-resize #t]))
 
 (new button% [parent bottom] [label "<<"]
      [callback (lambda (button event)
-                 (begin (myPrev)
-                        (sleep .5)
-                        (send PlayMsg set-label (vlc-get-title))))])
+                 (begin (myPrev)))])
 
 
 (define pp (new button% [parent bottom] [label "Play"]
@@ -164,17 +208,17 @@
                  (begin (sleep .01) (if (eq? (isPlaying 'state?) #f)
                                         (begin (send pp set-label "Pause")
                                                (sleep .5)
-                                               (send PlayMsg set-label (vlc-get-title)))
+                                               (send PlayMsg set-label (string-append "Playing - " (vlc-get-title))))
                                         (begin (send pp set-label "Play")
                                                (sleep .5)
-                                               (send PlayMsg set-label "Paused")))
+                                               (send PlayMsg set-label (string-append "Paused - " (vlc-get-title)))))
                         (myplay-pause)))]))
 
 (new button% [parent bottom] [label ">>"]
      [callback (lambda (button event)
-                 (begin (myNext)
-                        (sleep .5)
-                        (send PlayMsg set-label (vlc-get-title))))])
+                 (myNext))])
+
+
 
 (define clearQB (new button% [parent topleft] [label "Clear Queue"]
      [callback (lambda (button event)
@@ -189,7 +233,7 @@
                  (begin (playAll get-song-dir)
                         (send pp set-label "Pause")
                         (sleep .5)
-                        (send PlayMsg set-label (vlc-get-title))))]))
+                        (send PlayMsg set-label (string-append "Playing - " (vlc-get-title)))))]))
 
 (define shuffleallB (new button% [parent topleft] [label "Shuffle All"]
      [callback (lambda (button event)
@@ -197,17 +241,19 @@
                         (send pp set-label "Pause")
                         (send shuffleTB set-label "Shuffle On")
                         (sleep .5)
-                        (send PlayMsg set-label (vlc-get-title))))]))
+                        (send PlayMsg set-label (string-append "Playing - " (vlc-get-title)))))]))
 
 
 (define shuffleTB (new button% [parent topleft] [label "Shuffle Off"]
      [callback (lambda (button event)
                  (begin (sleep .01) (if (eq? (isShuffle 'state?) #f)
                                         (begin (send shuffleTB set-label "Shuffle On")
-                                               (isShuffle 'true))
+                                               (isShuffle 'true)
+                                               (vlc-random #t))
                                         (begin (send pp set-label "Play")
                                                (begin (send shuffleTB set-label "Shuffle Off")
-                                               (isShuffle 'false))))))]))
+                                               (isShuffle 'false)
+                                               (vlc-random #f))))))]))
 
 
 
