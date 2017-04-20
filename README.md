@@ -62,5 +62,5 @@ Getting directory and file path for mp3 id3 parsing, this includes the recursive
 
 ### Ryan Delosh @Liqueseous
 - [ ] Milestone One - Add procedures for music manipulation that will later play a major role in UI development
-- [ ] Milestone Two - Add UI components for previously mentioned procedures and create unit tests for data parsing
+- [ ] Milestone Two - Add UI components for previously mentioned procedures
 - [ ] Public Presentation - Implement Extra UI feature through collabarative effort
