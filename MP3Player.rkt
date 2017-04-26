@@ -1,4 +1,10 @@
 #lang racket
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;Developed by
+;;;;Ryan DeLosh - @Liqueseous
+;;;;Mayur Khatri - @Tensai66
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (require vlc)
 (require racket/file)
