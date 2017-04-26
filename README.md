@@ -28,7 +28,7 @@ If all criteria for the project are met (analysis section).
 If the player is able to open and play the files successfully and has an interactive UI.  
 
 ## Architecture Diagram
-![Architecture Diagram](https://cloud.githubusercontent.com/assets/13400667/25413414/2e5c90fc-29f8-11e7-88ee-c5301b6e132a.png)
+![Architecture Diagram](https://cloud.githubusercontent.com/assets/13400667/25413414/2e5c90fc-29f8-11e7-88ee-c5301b6e132a.png).  
   We will create a procedure that will search a given directory for .mp3 files, from there we will parse the ID3 tags and generate a list. Once the list is generated it is displayed in the UI and the song can be controlled through the UI using data abstration into the procedures that we created to manipulate the files. The only thing that the user can see is the UI.
   
 ## Schedule
