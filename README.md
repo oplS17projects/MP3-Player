@@ -28,7 +28,7 @@ If all criteria for the project are met (analysis section).
 If the player is able to open and play the files successfully and has an interactive UI.  
 
 ## Architecture Diagram
-![Architecture Diagram](https://cloud.githubusercontent.com/assets/16441327/24590864/f4334e3a-17c2-11e7-9328-5012de00fdb9.png)
+![Architecture Diagram](https://cloud.githubusercontent.com/assets/13400667/25413414/2e5c90fc-29f8-11e7-88ee-c5301b6e132a.png)
   We will create a procedure that will search a given directory for .mp3 files, from there we will parse the ID3 tags and generate a list. Once the list is generated it is displayed in the UI and the song can be controlled through the UI using data abstration into the procedures that we created to manipulate the files. The only thing that the user can see is the UI.
   
 ## Schedule
@@ -49,7 +49,9 @@ Successfully have completed getting id3 object data and parsing it to use with U
 ## Group Responsibilities
 
 ### Mayur Khatri @tensai66
-Getting directory and file path for mp3 id3 parsing, this includes the recursive functions to get list of id3 objects and parsing that data with filters to be used for the UI portion.
+Getting directory and file path for mp3 id3 parsing, this includes the recursive functions to get list of id3 objects and parsing that data with filters to be used for the UI portion. 
+
+UI Portion includes modifying panels for the list of songs from file directory to show song data (Working with Ryan Delosh to get the lists to properly show in the frame).
 
 ### Ryan Delosh @Liqueseous
 - [ ] Milestone One - Add procedures for music manipulation that will later play a major role in UI development
