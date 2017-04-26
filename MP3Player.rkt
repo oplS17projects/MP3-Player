@@ -11,7 +11,7 @@
 
 ;;;;;;;;;;CHANGE BELOW PATH TO YOUR MEDIA FILE PATH;;;;;;;;;;;;;;;;
 ;;(define file-path (string->path "C:\\Users\\MayursMac\\Music\\My Music\\Blink 182 Discography\\2013 - Icon\\"))
-(define file-path (string->path "/Users/liqueseous/ownCloud/Documents/Spring2017/OPL/MP3-Player/TestMedia/"))
+(define file-path (string->path "/Users/liqueseous/ownCloud/Documents/Repos/MP3-Player/TestMedia/"))
 ;;;;;;;;;;;;;;;;;;;;;;CHANGE ABOVE PATH;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define (file-format exten) (string-suffix? (path->string exten) ".mp3"))
 (define file-folder (find-files file-format file-path))
@@ -99,12 +99,15 @@
                          (begin (pause))))
 ;;Song Next in Queue
 (define (myNext) (if (eq? #f (isPlaying 'state?))
-                              (begin (vlc-next) (vlc-seek 0) (sleep .1) (vlc-pause) (send PlayMsg set-label (string-append "Paused - " (vlc-get-title))))
-                              (begin (vlc-next) (vlc-seek 0) (sleep .1)(isPlaying 'true) (send PlayMsg set-label (string-append "Playing - " (vlc-get-title))))))
+                              (begin (vlc-next) (vlc-seek 0) (sleep .1) (vlc-pause) (send PlayMsg set-label (string-append "Paused - " (getTitle))))
+                              (begin (vlc-next) (vlc-seek 0) (sleep .1)(isPlaying 'true) (send PlayMsg set-label (string-append "Playing - " (getTitle))))))
 ;;Song Previous
 (define (myPrev) (if (eq? #f (isPlaying 'state?))
-                              (begin (vlc-prev) (vlc-seek 0) (sleep .1) (vlc-pause) (send PlayMsg set-label (string-append "Paused - " (vlc-get-title))))
-                              (begin (vlc-prev) (vlc-seek 0) (sleep .1) (isPlaying 'true) (send PlayMsg set-label (string-append "Playing - " (vlc-get-title))))))
+                              (begin (vlc-prev) (vlc-seek 0) (sleep .1) (vlc-pause) (send PlayMsg set-label (string-append "Paused - " (getTitle))))
+                              (begin (vlc-prev) (vlc-seek 0) (sleep .1) (isPlaying 'true) (send PlayMsg set-label (string-append "Playing - " (getTitle))))))
+
+;;get title
+(define (getTitle) (vlc-get-title))
 ;;currentlyPlaying?
 (define (isPlaying?) (isPlaying 'state?))
 
@@ -169,13 +172,7 @@
                     [spacing 5]
                     [border 0]))
 
-;;(define msg (new message% [parent bottom]
-;;                 [label "No events so far..."]))
-
-(define dialog (instantiate dialog% ("Example")))
-(new text-field% [parent dialog] [label "Your name"])
-
-
+;;print list of songs
 (define (print-songs songs artists songdir)
   (if (null? songs)
       '()
@@ -186,40 +183,40 @@
      [callback (lambda (button event)
                  (begin (playNow (car songdir))
                         (send pp set-label "Pause")
-                        (send PlayMsg set-label (string-append "Playing - " (vlc-get-title)))))])
+                        (send PlayMsg set-label (string-append "Playing - " (getTitle)))))])
              
              (print-songs (cdr songs) (cdr artists) (cdr songdir)))))
 
 (define printed-songs (print-songs title-list artist-list get-song-dir))
 
 
-
+;;current song status
 (define PlayMsg (new message% [parent statuspanel]
                      [label "Not Playing"]
                      [auto-resize #t]))
-
+;;previous song button
 (new button% [parent bottom] [label "<<"]
      [callback (lambda (button event)
                  (begin (myPrev)))])
 
-
+;;pause/play button
 (define pp (new button% [parent bottom] [label "Play"]
      [callback (lambda (button event)
                  (begin (sleep .01) (if (eq? (isPlaying 'state?) #f)
                                         (begin (send pp set-label "Pause")
                                                (sleep .5)
-                                               (send PlayMsg set-label (string-append "Playing - " (vlc-get-title))))
+                                               (send PlayMsg set-label (string-append "Playing - " (getTitle))))
                                         (begin (send pp set-label "Play")
                                                (sleep .5)
-                                               (send PlayMsg set-label (string-append "Paused - " (vlc-get-title)))))
+                                               (send PlayMsg set-label (string-append "Paused - " (getTitle)))))
                         (myplay-pause)))]))
-
+;;next song button
 (new button% [parent bottom] [label ">>"]
      [callback (lambda (button event)
                  (myNext))])
 
 
-
+;;clear queue button
 (define clearQB (new button% [parent topleft] [label "Clear Queue"]
      [callback (lambda (button event)
                  (begin (clearQ)
@@ -228,22 +225,24 @@
                         (sleep 1)
                         (send PlayMsg set-label "Not Playing")))]))
 
+;;play all songs button
 (define playallB (new button% [parent topleft] [label "Play All"]
      [callback (lambda (button event)
                  (begin (playAll get-song-dir)
                         (send pp set-label "Pause")
                         (sleep .5)
-                        (send PlayMsg set-label (string-append "Playing - " (vlc-get-title)))))]))
+                        (send PlayMsg set-label (string-append "Playing - " (getTitle)))))]))
 
+;;shuffle all songs button
 (define shuffleallB (new button% [parent topleft] [label "Shuffle All"]
      [callback (lambda (button event)
                  (begin (shuffleAll get-song-dir)
                         (send pp set-label "Pause")
                         (send shuffleTB set-label "Shuffle On")
                         (sleep .5)
-                        (send PlayMsg set-label (string-append "Playing - " (vlc-get-title)))))]))
+                        (send PlayMsg set-label (string-append "Playing - " (getTitle)))))]))
 
-
+;;shuffle toggle button
 (define shuffleTB (new button% [parent topleft] [label "Shuffle Off"]
      [callback (lambda (button event)
                  (begin (sleep .01) (if (eq? (isShuffle 'state?) #f)
@@ -256,23 +255,4 @@
                                                (vlc-random #f))))))]))
 
 
-
-
-
 (send window show #t)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
