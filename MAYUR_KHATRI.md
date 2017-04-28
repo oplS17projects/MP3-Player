@@ -35,19 +35,38 @@ UMass Lowell's COMP.3010 Organization of Programming languages course.
 
 Five examples are shown and they are individually numbered. 
 
-## 1. Initialization using a Global Object
+## 1. Data Abstraction
 
-The following code creates a global object, ```drive-client``` that is used in each of the subsequent API calls:
+The following code creates a function, ```dispatch``` that is used to set the states of controls in the program such as play/pause/shuffle. 
 
 ```
-(define drive-client
-  (oauth2-client
-   #:id "548798434144-6s8abp8aiqh99bthfptv1cc4qotlllj6.apps.googleusercontent.com"
-   #:secret "<email me for secret if you want to use my API>"))
+  (define (dispatch m)
+            (cond ((eq? m 'flip) (change-state))
+                  ((eq? m 'false) (setF))
+                  ((eq? m 'true) (setT))
+                  ((eq? m 'state?) (getState))
+                  (else (error "Unknown request" m))))
  ```
+ Below are the constructors and selectors for the function.
  
- While using global objects is not a central theme in the course, it's necessary to show this code to understand
- the later examples.
+ ```
+(define (make-state Statenow)
+
+  (define (change-state)
+    (if (eq? Statenow #f)
+        (set! Statenow #t)
+        (set! Statenow #f)))
+
+  (define (setF)
+    (set! Statenow #f))
+
+  (define (setT)
+    (set! Statenow #t))
+  
+  (define (getState) Statenow)
+```
+
+ This code is very similar to the ```make-account``` procedure. There are constructors and selectors for creating the data structures and retrieving their values. Thus, the abstraction barrier is never broken because the contents of the data object aren't directly accessed.
  
 ## 2. Selectors and Predicates using Procedural Abstraction
 
