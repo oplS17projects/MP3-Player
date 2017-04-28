@@ -37,7 +37,7 @@ Five examples are shown and they are individually numbered.
 
 ## 1. Data Abstraction for Program States
 
-The following code creates a function, ```dispatch``` that is used to set the states of controls in the program such as play/pause/shuffle. 
+The following code creates a procedure, ```dispatch``` that is used to set the states of controls in the program such as play/pause/shuffle. 
 
 ```
   (define (dispatch m)
@@ -47,7 +47,7 @@ The following code creates a function, ```dispatch``` that is used to set the st
                   ((eq? m 'state?) (getState))
                   (else (error "Unknown request" m))))
  ```
- Below are the constructors and selectors for the function ```dispatch```. 
+ Below are the constructors and selectors for the procedure ```dispatch```. 
  
  ```
 (define (make-state Statenow)
@@ -70,14 +70,20 @@ The following code creates a function, ```dispatch``` that is used to set the st
  
 ## 2. Using Recursion to Process Object Data
 
-A set of procedures was created to operate on the core ```drive-file``` object. Drive-files may be either
-actual file objects or folder objects. In Racket, they are represented as a hash table.
+A set of procedures was created to operate on the main ```read-id3``` interface object. 
 
+The procedure ```make-list``` was created to traverse through all the files which were retrieved by ```file-path``` that had the extension ".mp3" from ```file-format``` and then to make a list of these.
 ```
 (define (make-list file-folder)
   (if (null? file-folder)
       '()
       (cons (path->string (car file-folder)) (make-list (cdr file-folder)))))
+```
+
+The procedure ```get-song``` is used to retrieve the songs from the ```read-id3``` interface object. It's given ```get-song-dir``` which uses the ```make-list``` procedure from before to get the song names and place them into a list.
+
+```
+(define get-song-dir (make-list file-folder))
 ```
 
 ```
@@ -89,6 +95,7 @@ actual file objects or folder objects. In Racket, they are represented as a hash
                 (song (read-id3 (car get-song-dir))))
             (get-song (cdr get-song-dir)))))
 ```
+The procedure ```get-artist``` is used to retrieve the artist from the ```read-id3``` interface object. It's also given ```get-song-dir``` which uses the ```make-list``` procedure from before to get the artist names and place them into a list as well. Thus, giving the artist and the song which will be used later for the UI playlist.
 
 ```
 (define (get-artist get-song-dir)
