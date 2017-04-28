@@ -35,7 +35,7 @@ The code uses four libraries:
 Here is a discussion of the most essential procedures, including a description of how they embody ideas from 
 UMass Lowell's COMP.3010 Organization of Programming languages course.
 
-Five examples are shown and they are individually numbered. 
+Four examples are shown and they are individually numbered. 
 
 ## 1. Data Abstraction for Program States
 ```
