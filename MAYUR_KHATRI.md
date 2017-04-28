@@ -11,6 +11,8 @@ The program will recursively look through any given directory that contains file
 
 This ID3 object data will again be processed recursively to filter out only the artist and the song name that will be used in the UI so that users may see which songs are in the playlist in the format "artist - song". 
 
+The program follows the main aspects of functional programming. It has data abstraction, recursion to filter data, state modification, and objection orientation used throughout.
+
 **Authorship note:** The code explained here is written by both my partner and I.
 
 # Libraries Used
