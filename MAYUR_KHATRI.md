@@ -11,7 +11,7 @@ The program will recursively look through any given directory that contains file
 
 This ID3 object data will again be processed recursively to filter out only the artist and the song name that will be used in the UI so that users may see which songs are in the playlist in the format "artist - song". 
 
-**Authorship note:** 
+**Authorship note:** The code explained here is written by both my partner and I.
 
 # Libraries Used
 The code uses four libraries:
@@ -36,7 +36,9 @@ UMass Lowell's COMP.3010 Organization of Programming languages course.
 Five examples are shown and they are individually numbered. 
 
 ## 1. Data Abstraction for Program States
-
+```
+This part was worked on by my partner Ryan Delosh.
+```
 The following code creates a procedure, ```dispatch``` that is used to set the states of controls in the program such as play/pause/shuffle. 
 
 ```
@@ -69,6 +71,9 @@ The following code creates a procedure, ```dispatch``` that is used to set the s
  This code is very similar to the ```make-account``` procedure. There are constructors and selectors for creating the data structures and retrieving their values. Thus, the abstraction barrier is never broken because the contents of the data object aren't directly accessed.
  
 ## 2. Using Recursion to Process Object Data
+```
+This part was worked on by me.
+```
 
 A set of procedures was created to operate on the main ```read-id3``` interface object. 
 
@@ -108,7 +113,9 @@ The procedure ```get-artist``` is used to retrieve the artist from the ```read-i
 ```
 
 ## 3. Functional Approach to Processing Data
-
+```
+This part was worked on by me.
+```
 The following procedures ```file-format```, ```file-path```, and ```file-folder``` are created to find the files to be used for reading the object data. 
 
 ```
@@ -137,7 +144,9 @@ This procedure here uses ```get-song-dir``` and recurses through to get the song
 ```
 
 ## 4. State-Modification Approach to Changing Program State
-
+```
+This part was worked on by my partner Ryan Delosh.
+```
 The program states where changed by first creating a ```Statenow``` object so that it was encapsulated, which was then modified for either ```#t``` or ```#f``` based upon whether the shuffle was on/off or the song was paused/playing. 
 
 ```
