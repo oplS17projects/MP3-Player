@@ -35,7 +35,7 @@ UMass Lowell's COMP.3010 Organization of Programming languages course.
 
 Five examples are shown and they are individually numbered. 
 
-## 1. Data Abstraction
+## 1. Data Abstraction for Program States
 
 The following code creates a function, ```dispatch``` that is used to set the states of controls in the program such as play/pause/shuffle. 
 
@@ -47,7 +47,7 @@ The following code creates a function, ```dispatch``` that is used to set the st
                   ((eq? m 'state?) (getState))
                   (else (error "Unknown request" m))))
  ```
- Below are the constructors and selectors for the function.
+ Below are the constructors and selectors for the function ```dispatch```. 
  
  ```
 (define (make-state Statenow)
@@ -68,32 +68,38 @@ The following code creates a function, ```dispatch``` that is used to set the st
 
  This code is very similar to the ```make-account``` procedure. There are constructors and selectors for creating the data structures and retrieving their values. Thus, the abstraction barrier is never broken because the contents of the data object aren't directly accessed.
  
-## 2. Selectors and Predicates using Procedural Abstraction
+## 2. Using Recursion to Process Object Data
 
 A set of procedures was created to operate on the core ```drive-file``` object. Drive-files may be either
 actual file objects or folder objects. In Racket, they are represented as a hash table.
 
-```folder?``` accepts a ```drive-file```, inspects its ```mimeType```, and returns ```#t``` or ```#f```:
+```
+(define (make-list file-folder)
+  (if (null? file-folder)
+      '()
+      (cons (path->string (car file-folder)) (make-list (cdr file-folder)))))
+```
 
 ```
-(define (folder? drive-file)
-  (string=? (hash-ref drive-file 'mimeType "nope") "application/vnd.google-apps.folder"))
+(define (get-song get-song-dir)
+  (if (null? get-song-dir)
+      '()
+      (cons (if (eq? (song (read-id3 (car get-song-dir))) #f)
+                "No Title Available"
+                (song (read-id3 (car get-song-dir))))
+            (get-song (cdr get-song-dir)))))
 ```
 
-Another object produced by the Google Drive API is a list of drive-file objects ("```drive#fileList```"). 
-When converted by the JSON library,
-this list appears as hash map. 
-
-```get-files``` retrieves a list of the files themselves, and ```get-id``` retrieves the unique ID
-associated with a ```drive#fileList``` object:
-
 ```
-(define (get-files obj)
-  (hash-ref obj 'files))
-
-(define (get-id obj)
-  (hash-ref obj 'id))
+(define (get-artist get-song-dir)
+  (if (null? get-song-dir)
+      '()
+      (cons (if (eq? (artist (read-id3 (car get-song-dir))) #f)
+                "No Artist Available"
+                (artist (read-id3 (car get-song-dir))))
+            (get-song (cdr get-song-dir)))))
 ```
+
 ## 3. Using Recursion to Accumulate Results
 
 The low-level routine for interacting with Google Drive is named ```list-children```. This accepts an ID of a 
