@@ -40,7 +40,83 @@ UMass Lowell's COMP.3010 Organization of Programming languages course.
 
 Four examples are shown and they are individually numbered. 
 
-## 1. Data Abstraction for Program States
+## 1. Selectors using Procesural Abstraction
+```
+This part was worked on by me.
+```
+The following code creates a procedure, ```playNow``` that is used to play a given song right away.
+```
+(define (playNow URL)
+  (begin (clearQ)
+  (addQ URL)
+  (sleep .05)
+  (myplay)))
+```
+This procedure runs other procedures that I creates as setters to provide data abstraction. Below are the setters that this procedure calls.
+```
+(define (clearQ) (begin (vlc-clear) (isPlaying 'false)))
+
+(define (addQ URL) (if (eq? #f (isPlaying 'state?))
+                              (begin (vlc-add URL) (vlc-seek 0) (mystop))
+                              (begin (vlc-add URL) (vlc-seek 0) (isPlaying 'true))))
+                                     
+;;Clear Queue
+
+(define (myplay) (begin (vlc-play) (isPlaying 'true)))
+```
+ There are many more procedures within the program that demonstrate procedural abstraction.
+ 
+## 2. Using Recursion
+```
+This part was worked on by me and my partner Mayur.
+```
+
+A set of procedures was created to display songs to the user to interact with.
+
+The procedure ```print-songs``` was created to recursively print out a list of songs along with a play button for that song.
+```
+(define (print-songs songs artists songdir)
+  (if (null? songs)
+      '()
+      (begin (new message% [parent song-panel]
+                           [label (string-append (car songs) " - " (car artists))])
+
+             (new button% [parent song-panel] [label "Play Now"]
+     [callback (lambda (button event)
+                 (begin (playNow (car songdir))
+                        (send pp set-label "Pause")
+                        (send PlayMsg set-label (string-append "Playing - " (getTitle)))))])
+             
+             (print-songs (cdr songs) (cdr artists) (cdr songdir)))))
+```
+
+The procedure ```printed-songs``` is used as a helper function that starts the recursive printing of the songs providing another later of data abstraction.
+```
+(define printed-songs (print-songs title-list artist-list get-song-dir))
+```
+## 3. State-Modification Approach to Changing Program States
+```
+This part was worked on by me..
+```
+The program uses states to keep track of different things going on. Mainly play/pause and shuffle. These states are provided an initialized value provided within ```Statenow```  this state is then then modified for either ```#t``` or ```#f``` based upon whether the shuffle was on/off or the song was paused/playing. 
+
+```
+(define (make-state Statenow)
+
+  (define (change-state)
+    (if (eq? Statenow #f)
+        (set! Statenow #t)
+        (set! Statenow #f)))
+
+  (define (setF)
+    (set! Statenow #f))
+
+  (define (setT)
+    (set! Statenow #t))
+```
+
+
+## 4. Data Abstraction for Program States
 ```
 This part was worked on by me.
 ```
@@ -73,98 +149,4 @@ The following code creates a procedure, ```dispatch``` that is used to set the s
   (define (getState) Statenow)
 ```
 
- This code is very similar to the ```make-account``` procedure. There are constructors and selectors for creating the data structures and retrieving their values. Thus, the abstraction barrier is never broken because the contents of the data object aren't directly accessed.
- 
-## 2. Using Recursion to Process Object Data
-```
-This part was worked on by me.
-```
-
-A set of procedures was created to operate on the main ```read-id3``` interface object. 
-
-The procedure ```make-list``` was created to traverse through all the files which were retrieved by ```file-path``` that had the extension ".mp3" from ```file-format``` and then to make a list of these.
-```
-(define (make-list file-folder)
-  (if (null? file-folder)
-      '()
-      (cons (path->string (car file-folder)) (make-list (cdr file-folder)))))
-```
-
-The procedure ```get-song``` is used to retrieve the songs from the ```read-id3``` interface object. It's given ```get-song-dir``` which uses the ```make-list``` procedure from before to get the song names and place them into a list.
-
-```
-(define get-song-dir (make-list file-folder))
-```
-
-```
-(define (get-song get-song-dir)
-  (if (null? get-song-dir)
-      '()
-      (cons (if (eq? (song (read-id3 (car get-song-dir))) #f)
-                "No Title Available"
-                (song (read-id3 (car get-song-dir))))
-            (get-song (cdr get-song-dir)))))
-```
-The procedure ```get-artist``` is used to retrieve the artist from the ```read-id3``` interface object. It's also given ```get-song-dir``` which uses the ```make-list``` procedure from before to get the artist names and place them into a list as well. Thus, giving the artist and the song which will be used later for the UI playlist.
-
-```
-(define (get-artist get-song-dir)
-  (if (null? get-song-dir)
-      '()
-      (cons (if (eq? (artist (read-id3 (car get-song-dir))) #f)
-                "No Artist Available"
-                (artist (read-id3 (car get-song-dir))))
-            (get-song (cdr get-song-dir)))))
-```
-
-## 3. Functional Approach to Processing Data
-```
-This part was worked on by me.
-```
-The following procedures ```file-format```, ```file-path```, and ```file-folder``` are created to find the files to be used for reading the object data. 
-
-```
-(define file-path (string->path "PATH_TO_FOLDER_WITH_SONGS"))
-(define (file-format exten) (string-suffix? (path->string exten) ".mp3"))
-(define file-folder (find-files file-format file-path))
-```
-
-Then the above procedures are used with the functional programming approach; the abstraction barrier is not broken and then the below procedures are used with the procedures listed in section 2 to obtain the information needed to process the ```read-id3``` object. 
-
-```
-(define artist-list (get-artist file-folder))
-(define title-list (get-song file-folder))
-(define get-song-dir (make-list file-folder))
-```
-
-This procedure here uses ```get-song-dir``` and recurses through to get the song name using the functional programming approach to processing data first getting the car of the ```read-id3``` object and then calling unto itself and getting the cdr of the list. 
-```
-(define (get-song get-song-dir)
-  (if (null? get-song-dir)
-      '()
-      (cons (if (eq? (song (read-id3 (car get-song-dir))) #f)
-                "No Title Available"
-                (song (read-id3 (car get-song-dir))))
-            (get-song (cdr get-song-dir)))))
-```
-
-## 4. State-Modification Approach to Changing Program State
-```
-This part was worked on by my partner Ryan Delosh.
-```
-The program states where changed by first creating a ```Statenow``` object so that it was encapsulated, which was then modified for either ```#t``` or ```#f``` based upon whether the shuffle was on/off or the song was paused/playing. 
-
-```
-(define (make-state Statenow)
-
-  (define (change-state)
-    (if (eq? Statenow #f)
-        (set! Statenow #t)
-        (set! Statenow #f)))
-
-  (define (setF)
-    (set! Statenow #f))
-
-  (define (setT)
-    (set! Statenow #t))
-```
+ This code is very similar to the ```make-account``` procedure. There are constructors and selectors for creating the data structures and retrieving their values. Thus, the abstraction barrier is never broken because the contents of the data object aren't directly accessed by the user.
