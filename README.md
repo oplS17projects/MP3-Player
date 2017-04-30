@@ -56,4 +56,4 @@ The UI Portion included modifying panels for the list of songs from file directo
 ### Ryan Delosh @Liqueseous
 - [ ] Milestone One - Add procedures for music manipulation that will later play a major role in UI development
 - [ ] Milestone Two - Add UI components for previously mentioned procedures
-- [ ] Public Presentation - Implement Extra UI feature through collabarative effort
+- [ ] Public Presentation - Worked with partner on creating and planning out UI, did bug testing and made sure application worked 100%
